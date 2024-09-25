@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Knowledge Graph</title>
+  <style> body { margin: 0; } </style>
+
+  <script src="//unpkg.com/3d-force-graph"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "//unpkg.com/three/build/three.module.js"
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <div id="3d-graph" style="width: 100vw; height: 100vh;"></div>
+
+  <script type="module">
+    import SpriteText from "//unpkg.com/three-spritetext/dist/three-spritetext.mjs";
+
+    const gData = {
+      "nodes": [
+        // First-Level Nodes (Datasets)
+        {"id": "American Community Survey", "group": 1},
+
+        // Second-Level Nodes (Codes)
+        {"id": "AHINC", "group": 2},
+        {"id": "FINC", "group": 2},
+        {"id": "GRNT", "group": 2},
+        {"id": "RNT", "group": 2},
+        {"id": "SMOC", "group": 2},
+        {"id": "MRG", "group": 2},
+        {"id": "MRGT", "group": 2},
+        {"id": "MRGI", "group": 2},
+        {"id": "MRGX", "group": 2},
+        {"id": "GRPI", "group": 2},
+        {"id": "OCPI", "group": 2},
+        {"id": "BDS", "group": 2},
+        {"id": "RMS", "group": 2},
+        {"id": "NP", "group": 2},
+        {"id": "NPF", "group": 2},
+        {"id": "NOC", "group": 2},
+        {"id": "R18", "group": 2},
+        {"id": "R60", "group": 2},
+        {"id": "R65", "group": 2},
+        {"id": "MULTG", "group": 2},
+        {"id": "HFL", "group": 2},
+        {"id": "HHLDRACE", "group": 2},
+        {"id": "HHLDRAGE", "group": 2},
+        {"id": "HHLDSCHL", "group": 2},
+        {"id": "VACS", "group": 2},
+        {"id": "TEN", "group": 2},
+        {"id": "HINC", "group": 2},
+        {"id": "VAL", "group": 2},
+        {"id": "FMRGX", "group": 2},
+        {"id": "FMRGT", "group": 2},
+        {"id": "BATH", "group": 2},
+        {"id": "KIT", "group": 2},
+        {"id": "PLM", "group": 2},
+        {"id": "YBL", "group": 2},
+        {"id": "MVY", "group": 2},
+        {"id": "ELE", "group": 2},
+        {"id": "GAS", "group": 2},
+        {"id": "WAT", "group": 2},
+        {"id": "BLD", "group": 2},
+        {"id": "SMXH", "group": 2},
+        {"id": "SMXS", "group": 2},
+
+        // Third-Level Nodes (Categories)
+        {"id": "Housing Affordability", "group": 3},
+        {"id": "Housing Patterns", "group": 3},
+        {"id": "Housing Vacancies and Homeownership", "group": 3},
+        {"id": "New Residential Construction", "group": 3},
+        {"id": "Rental Housing Finance Survey (RHFS)", "group": 3},
+        {"id": "Residential Finance Survey (RFS)", "group": 3}
+      ],
+      "links": [
+        // Links from Datasets to Codes
+        {"source": "American Community Survey", "target": "AHINC", "value": 1},
+        {"source": "American Community Survey", "target": "FINC", "value": 1},
+        {"source": "American Community Survey", "target": "GRNT", "value": 1},
+        {"source": "American Community Survey", "target": "RNT", "value": 1},
+        {"source": "American Community Survey", "target": "SMOC", "value": 1},
+        {"source": "American Community Survey", "target": "MRG", "value": 1},
+        {"source": "American Community Survey", "target": "MRGT", "value": 1},
+        {"source": "American Community Survey", "target": "MRGI", "value": 1},
+        {"source": "American Community Survey", "target": "MRGX", "value": 1},
+        {"source": "American Community Survey", "target": "GRPI", "value": 1},
+        {"source": "American Community Survey", "target": "OCPI", "value": 1},
+
+        // Links from Codes to Categories
+        {"source": "AHINC", "target": "Housing Affordability", "value": 1},
+        {"source": "FINC", "target": "Housing Affordability", "value": 1},
+        {"source": "GRNT", "target": "Housing Affordability", "value": 1},
+        {"source": "RNT", "target": "Housing Affordability", "value": 1},
+        {"source": "SMOC", "target": "Housing Affordability", "value": 1},
+        {"source": "MRG", "target": "Housing Affordability", "value": 1},
+        {"source": "MRGT", "target": "Housing Affordability", "value": 1},
+        {"source": "MRGX", "target": "Housing Affordability", "value": 1},
+        {"source": "GRPI", "target": "Housing Affordability", "value": 1},
+        {"source": "OCPI", "target": "Housing Affordability", "value": 1},
+
+        {"source": "BDS", "target": "Housing Patterns", "value": 1},
+        {"source": "RMS", "target": "Housing Patterns", "value": 1},
+        {"source": "NP", "target": "Housing Patterns", "value": 1},
+        {"source": "NPF", "target": "Housing Patterns", "value": 1},
+        {"source": "NOC", "target": "Housing Patterns", "value": 1},
+        {"source": "R18", "target": "Housing Patterns", "value": 1},
+        {"source": "R60", "target": "Housing Patterns", "value": 1},
+        {"source": "R65", "target": "Housing Patterns", "value": 1},
+        {"source": "MULTG", "target": "Housing Patterns", "value": 1},
+        {"source": "HFL", "target": "Housing Patterns", "value": 1},
+        {"source": "HHLDRACE", "target": "Housing Patterns", "value": 1},
+        {"source": "HHLDRAGE", "target": "Housing Patterns", "value": 1},
+        {"source": "HHLDSCHL", "target": "Housing Patterns", "value": 1},
+
+        {"source": "VACS", "target": "Housing Vacancies and Homeownership", "value": 1},
+        {"source": "TEN", "target": "Housing Vacancies and Homeownership", "value": 1},
+        {"source": "HINC", "target": "Housing Vacancies and Homeownership", "value": 1},
+        {"source": "VAL", "target": "Housing Vacancies and Homeownership", "value": 1},
+        {"source": "FMRGX", "target": "Housing Vacancies and Homeownership", "value": 1},
+        {"source": "FMRGT", "target": "Housing Vacancies and Homeownership", "value": 1},
+
+        {"source": "BATH", "target": "New Residential Construction", "value": 1},
+        {"source": "KIT", "target": "New Residential Construction", "value": 1},
+        {"source": "PLM", "target": "New Residential Construction", "value": 1},
+        {"source": "RMS", "target": "New Residential Construction", "value": 1},
+        {"source": "YBL", "target": "New Residential Construction", "value": 1},
+        {"source": "MVY", "target": "New Residential Construction", "value": 1},
+        {"source": "ELE", "target": "New Residential Construction", "value": 1},
+        {"source": "GAS", "target": "New Residential Construction", "value": 1},
+        {"source": "WAT", "target": "New Residential Construction", "value": 1},
+        {"source": "BLD", "target": "New Residential Construction", "value": 1},
+        {"source": "SMXH", "target": "New Residential Construction", "value": 1},
+        {"source": "SMXS", "target": "New Residential Construction", "value": 1},
+
+        {"source": "GRNT", "target": "Rental Housing Finance Survey (RHFS)", "value": 1},
+        {"source": "RNT", "target": "Rental Housing Finance Survey (RHFS)", "value": 1},
+        {"source": "RNTM", "target": "Rental Housing Finance Survey (RHFS)", "value": 1},
+        {"source": "SRNT", "target": "Rental Housing Finance Survey (RHFS)", "value": 1},
+        {"source": "GRPI", "target": "Rental Housing Finance Survey (RHFS)", "value": 1},
+        {"source": "SMOC", "target": "Rental Housing Finance Survey (RHFS)", "value": 1},
+        {"source": "MRG", "target": "Rental Housing Finance Survey (RHFS)", "value": 1},
+
+        {"source": "MRG", "target": "Residential Finance Survey (RFS)", "value": 1},
+        {"source": "MRGT", "target": "Residential Finance Survey (RFS)", "value": 1},
+        {"source": "MRGI", "target": "Residential Finance Survey (RFS)", "value": 1},
+        {"source": "MRGX", "target": "Residential Finance Survey (RFS)", "value": 1},
+        {"source": "SMOC", "target": "Residential Finance Survey (RFS)", "value": 1},
+        {"source": "SMXH", "target": "Residential Finance Survey (RFS)", "value": 1},
+        {"source": "SMXS", "target": "Residential Finance Survey (RFS)", "value": 1},
+        {"source": "VAL", "target": "Residential Finance Survey (RFS)", "value": 1}
+      ]
+    };
+
+    const Graph = ForceGraph3D()(document.getElementById('3d-graph'))
+      .graphData(gData)
+      .nodeAutoColorBy('group')
+      .nodeThreeObject(node => {
+        const sprite = new SpriteText(node.id);
+        sprite.material.depthWrite = false; // Make sprite background transparent
+        sprite.color = node.color;
+        sprite.textHeight = 5; // Smaller text to make it more readable
+        return sprite;
+      });
+
+    // Strengthen the connections and bring nodes closer
+    Graph.d3Force('charge').strength(-50);  // Smaller negative charge for closer nodes
+    Graph.d3Force('link').distance(50);     // Reduce link distance to bring nodes together
+  </script>
+</body>
+</html>       
