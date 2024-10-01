@@ -1,6 +1,6 @@
 {
   "nodes": [
-    {“id”: “American Community Survey”, “group”: 1},
+    {"id": "American Community Survey", "group": 1},
     {“id”: “Housing Affordability”, “group”: 3},
     {“id”: “AHINC”, “group”: 2},
     {“id”: “FINC”, “group”: 2},
