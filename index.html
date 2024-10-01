@@ -1,31 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <style> body { margin: 0; } </style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Knowledge Graph</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: white;
+    }
+  </style>
   <script src="//unpkg.com/3d-force-graph"></script>
-  <!--<script src="../../dist/3d-force-graph.js"></script>-->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "//unpkg.com/three/build/three.module.js"
+      }
+    }
+  </script>
 </head>
 
 <body>
-  <div id="3d-graph"></div>
+  <div id="3d-graph" style="width: 100vw; height: 100vh;"></div>
 
-  <script type="importmap">{ "imports": { "three": "//unpkg.com/three/build/three.module.js" }}</script>
   <script type="module">
     import SpriteText from "//unpkg.com/three-spritetext/dist/three-spritetext.mjs";
 
-    const Graph = ForceGraph3D()
-      (document.getElementById('3d-graph'))
-        .jsonUrl('../data.json')
+    // Fetch the data from the JSON file
+    async function fetchGraphData() {
+      const response = await fetch('../data.json');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return await response.json();
+    }
+
+    fetchGraphData().then(gData => {
+      const Graph = ForceGraph3D()(document.getElementById('3d-graph'))
+        .graphData(gData)
         .nodeAutoColorBy('group')
         .nodeThreeObject(node => {
           const sprite = new SpriteText(node.id);
-          sprite.material.depthWrite = false; // make sprite background transparent
-          sprite.color = node.color;
-          sprite.textHeight = 8;
+          sprite.material.depthWrite = false; // Make sprite background transparent
+          sprite.color = node.color || '#000'; // Fallback color if not defined
+          sprite.textHeight = 5; // Smaller text for readability
           return sprite;
         });
 
-    // Spread nodes a little wider
-    Graph.d3Force('charge').strength(-120);
-
+      // Strengthen the connections and bring nodes closer
+      Graph.d3Force('charge').strength(-50);  // Smaller negative charge for closer nodes
+      Graph.d3Force('link').distance(50);      // Reduce link distance to bring nodes together
+    }).catch(error => {
+      console.error('Error loading the graph data:', error);
+    });
   </script>
 </body>
+</html>
