@@ -24,6 +24,13 @@
           return sprite;
         });
 
+        // Handle click event for nodes in group 1 and 4 (datasets)
+    Graph.onNodeClick(node => {
+      if ((node.group === 1 || node.group === 4) && node.url) {
+           window.open(node.url, '_blank');  // Open the URL in a new tab
+  }
+});
+    
     // Spread nodes a little wider
     Graph.d3Force('charge').strength(-120);
 
